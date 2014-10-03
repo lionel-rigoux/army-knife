@@ -16,7 +16,7 @@ else
     % try nested structures
     for iField = 1:numel(filedNameList)
         if isstruct(structList(1).(filedNameList{iField})) 
-            valueList = struct.exctract([structList.(filedNameList{iField})],fieldName);
+            valueList = struct.extract([structList.(filedNameList{iField})],fieldName);
             if ~isempty(valueList)
                 return ;
             end
