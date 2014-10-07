@@ -1,14 +1,21 @@
-function valueList = extract(structList,fieldName)
+function valueList = extract(structList,fieldName,forceArray)
 
+if ~exist('forceArray','var')
+    forceArray = false;
+end
 
 filedNameList = fieldnames(structList);
 
 if isfield(structList(1),fieldName)
     %___________________________________________________________
     % try first level
-    valueList = elvis( isnumeric(structList(1).(fieldName)), ...
-        [structList.(fieldName)]    ,...
-        {structList.(fieldName)} );
+    valueList = {structList.(fieldName)} ;
+    
+    % try to convert into matrix
+    if ~forceArray && isnumeric(valueList{1})
+        valueList = cell2mat(valueList);
+    end
+    
     return
     
 else
