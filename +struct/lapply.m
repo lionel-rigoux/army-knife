@@ -1,9 +1,7 @@
-function structListStacked = apply(structList, fHandle, fieldList)
-% STRUCT.APPLY
-% apply(structList, fHandle, fieldList)
-% batch apply the function handled by fHandle to all fields of structList
-% grouped according to the categories defined by structList (list of field
-% names)
+function structListStacked = lapply(structList, fHandle, fieldList)
+% lapply(structList, fHandle, fieldList)
+% batch apply the function handled by fHandle on all fields of the
+% structlist collapsed according to levels in fields of fieldList.
 
 % extract condition idx
 
