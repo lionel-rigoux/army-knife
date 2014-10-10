@@ -13,11 +13,16 @@ if nargin < 3
 end
 
 byVar = ind2sub_alldim(sizeMat, 1:numel(dataMat));
+
+if rem(length(byVar{binDim}),sizeBin)~=0;
+    warning('The number of elements is not a multiple of sizeBin!')
+end
+
 byVar{binDim} = ceil(byVar{binDim}/sizeBin);
 
 for iDim = 1:length(byVar)
     byVar{iDim}=reshape(byVar{iDim}, sizeMat);
 end
-binDataMat = tapply(dataMat, byVar, fun)
+binDataMat = tapply(dataMat, byVar, fun);
 end
 
