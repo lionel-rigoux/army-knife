@@ -13,7 +13,11 @@ if isfield(structList(1),fieldName)
     
     % try to convert into matrix
     if ~forceArray && isnumeric(valueList{1})
-        valueList = cell2mat(valueList);
+        sz = size(valueList{1}) ;
+        if sum(sz>1) > 1
+            valueList = cellfun( @(x) reshape(x, [1 sz]), valueList, 'UniformOutput',false) ;
+        end
+        valueList = cat(1,valueList{:}) ;
     end
     
     return
@@ -23,7 +27,7 @@ else
     % try nested structures
     for iField = 1:numel(filedNameList)
         if isstruct(structList(1).(filedNameList{iField})) 
-            valueList = struct.extract([structList.(filedNameList{iField})],fieldName);
+            valueList = struct.extract([structList.(filedNameList{iField})],fieldName,forceArray);
             if ~isempty(valueList)
                 return ;
             end

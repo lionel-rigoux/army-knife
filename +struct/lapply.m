@@ -4,8 +4,12 @@ function structListStacked = lapply(structList, fHandle, fieldList)
 % structlist collapsed according to levels in fields of fieldList.
 
 % extract condition idx
+if ~exist('fieldList') || isempty(fieldList)
+    familyStruct.families = {1:numel(structList)} ;
+else
+    familyStruct = struct.getFamilies(structList,fieldList);  
+end
 
-familyStruct = struct.getFamilies(structList,fieldList);
 
 for iF = 1:numel(familyStruct.families)
     idx = familyStruct.families{iF} ;
@@ -25,12 +29,25 @@ function structListStacked = safe_structfun(fHandle,structList)
             
             fieldValues = struct.extract(structList,fieldName);
             try
+                
+                assert(~isempty(fieldValues));
+                
                 value = fHandle(fieldValues);
+                
+                s = size(value);
+                if sum(s>1)>1 && s(1) == 1
+                try
+                    value = squeeze(value);
+                end
+                end
             catch
-                if numel(unique(fieldValues)) == 1
-                    value = fieldValues(1);
-                else
-                    value = NaN;
+                switch numel(unique(fieldValues))
+                    case 0
+                        value = [];
+                    case 1
+                        value = fieldValues(1);
+                    otherwise
+                        value = NaN;
                 end
             end
         end

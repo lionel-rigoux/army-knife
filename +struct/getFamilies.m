@@ -2,6 +2,7 @@ function familyStruct = getFamilies(structList,fieldNameList,prefix,idx)
 
     if ~exist('prefix'), prefix = ''                 ; end
     if ~exist('idx')   , idx    = 1:numel(structList); end
+    if ~exist('fieldNameList')   , fieldNameList    = {}; end
 
     if iscell(fieldNameList) && numel(fieldNameList) == 1
         fieldNameList = fieldNameList{1};
