@@ -4,7 +4,7 @@ if ~exist('forceArray','var')
     forceArray = false;
 end
 
-filedNameList = fieldnames(structList);
+fieldNameList = fieldnames(structList);
 
 if isfield(structList(1),fieldName)
     %___________________________________________________________
@@ -25,9 +25,9 @@ if isfield(structList(1),fieldName)
 else
     %___________________________________________________________
     % try nested structures
-    for iField = 1:numel(filedNameList)
-        if isstruct(structList(1).(filedNameList{iField})) 
-            valueList = struct.extract([structList.(filedNameList{iField})],fieldName,forceArray);
+    for iField = 1:numel(fieldNameList)
+        if isstruct(structList(1).(fieldNameList{iField})) 
+            valueList = struct.extract([structList.(fieldNameList{iField})],fieldName,forceArray);
             if ~isempty(valueList)
                 return ;
             end

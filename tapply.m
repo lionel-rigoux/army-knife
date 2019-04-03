@@ -4,10 +4,10 @@ function [ outputArg ] = tapply( x, list, fName )
 % levels of certain factors.
 %
 % IN:
-%     x : a vector 
+%     x : a vector
 %     list : a cell of one or more factors, each of same length as ‘X’.
 %     fName : the function to be applied (e.g. @mean)
-% Out 
+% Out
 %     a N*M*... matrix
 %     where N, M, etc are the number of levels of each factor defined in list
 %
@@ -25,34 +25,57 @@ function [ outputArg ] = tapply( x, list, fName )
 x=x(:);
 c=['['];
 for i = 1:length(list)
-  l=list{i};
-  l=l(:);
-  dim(i)=length(unique(l));
-  if length(l) ~=length(x)
-      error(['length(var)~=length(list{' num2str(i) '}'])
-  end
-  c=[c 'i' num2str(i) ' '];
+    l=list{i};
+    l=l(:);
+    dim(i)=length(unique(l));
+    if length(l) ~=length(x)
+        error(['length(var)~=length(list{' num2str(i) '}'])
+    end
+    c=[c 'i' num2str(i) ' '];
 end
 
 c=[c ']'];
 
-if length(list)==1
-outputArg=zeros(1,dim);
-else
-outputArg=zeros(dim);
+
+try
+    if length(list)==1
+        outputArg=zeros(1,dim);
+    else
+        outputArg=zeros(dim);
+    end
+    
+    for i = 1:numel(outputArg)
+        eval([c '=ind2sub(dim,i);']);
+        test=ones(1, length(x));
+        for j = 1:length(list)
+            eval(['ind = i' num2str(j) ';']);
+            l=list{j};
+            l=l(:);
+            f=unique(l);
+            test(l~=f(ind))=0;
+        end
+        outputArg(i)=fName(x(test==1));
+    end
+catch
+    if length(list)==1
+        outputArg=cell(1,dim);
+    else
+        outputArg=cell(dim);
+    end
+    
+    for i = 1:numel(outputArg)
+        eval([c '=ind2sub(dim,i);']);
+        test=ones(1, length(x));
+        for j = 1:length(list)
+            eval(['ind = i' num2str(j) ';']);
+            l=list{j};
+            l=l(:);
+            f=unique(l);
+            test(l~=f(ind))=0;
+        end
+        outputArg{i}=fName(x(test==1));
+    end
 end
 
-for i = 1:numel(outputArg)
-    eval([c '=ind2sub(dim,i);']);
-    test=ones(1, length(x));
-    for j = 1:length(list)
-        eval(['ind = i' num2str(j) ';']);
-        l=list{j};
-        l=l(:);
-        f=unique(l);
-        test(l~=f(ind))=0;
-    end
-    outputArg(i)=fName(x(test==1));
-end
 end
 
